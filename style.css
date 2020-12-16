@@ -46,3 +46,16 @@ html, body {
 .king-white {  background-image: url("img/king-white.png") }
 .pawn-black {  background-image: url("img/pawn-black.png") }
 .pawn-white {  background-image: url("img/pawn-white.png") }
+
+.available-cell {
+    box-shadow: inset 0 0 10px rgb(25, 153, 25);
+    cursor: pointer;
+}
+
+.available-cell:hover {
+    filter: hue-rotate(45deg);
+}
+
+.selected-cell {
+    box-shadow: inset 0 0 10px rgb(22, 22, 22);
+}

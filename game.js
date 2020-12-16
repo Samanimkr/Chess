@@ -5,8 +5,7 @@ let BOARD = []
 // Helper Functions
 
 const getAvailableMoves = (selector) => {
-
-    return [];
+    return [{posX: 0, posY: 2}, {posX: 0, posY: 3}];
 }
 
 // Elements
@@ -15,10 +14,24 @@ const cells = document.getElementsByClassName("cell")
 
 const onPieceSelect = selector => {
     const availableMoves = getAvailableMoves(selector);
+    const selectedCell = $(selector);
+
+    if (selectedCell.hasClass("selected-cell")) {
+        selectedCell.removeClass("selected-cell");
+    } else {
+        selectedCell.addClass("selected-cell");
+    }
 
     for (let move = 0; move < availableMoves.length; move++) {
-        // const availableCell = CURRENT_TURN === 1 ? P1_PIECES.find()
-        // $(availableCell).css("filter","hue-rotate(45deg)");
+        const { posX, posY } = availableMoves[move];
+        const cellNum = posX + (8 * posY) + 1;
+        const availableCell = $(`.cell:nth-of-type(${cellNum})`);
+
+        if (selectedCell.hasClass("selected-cell")) {
+            availableCell.addClass("available-cell");
+        } else {
+            availableCell.removeClass("available-cell");
+        }
     }
 }
 
@@ -41,7 +54,7 @@ for (let i = 0; i < cells.length; i++) {
             variant: cellData[2],
         })
 
-        $(cellSelector).click(onPieceSelect(cellSelector))
+        $(cellSelector).click(() => onPieceSelect(cellSelector))
 
         $(cellSelector).hover(
             () => {
@@ -59,7 +72,7 @@ for (let i = 0; i < cells.length; i++) {
     } else {
         row.push({
             id: null,
-            player: parseInt(cellData[0].slice(1)),
+            player: null,
             posX,
             posY,
             type: "empty",
