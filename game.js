@@ -4,17 +4,33 @@ let BOARD = []
 
 // Helper Functions
 
-const getAvailableMoves = (selector) => {
-    return [{posX: 0, posY: 2}, {posX: 0, posY: 3}];
+const getAvailableMoves = selectedCellInfo => {
+    const availableMoves = [];
+    const { type, player, posX, posY } = selectedCellInfo;
+    const currentPlayer = `p${CURRENT_TURN}`;
+    
+    if (type === "pawn") {
+        if (player === 1) {
+            availableMoves.push({ posX, posY: posY + 1})
+            if (posY === 1) availableMoves.push({ posX, posY: posY + 2})
+        } else {
+            availableMoves.push({ posX, posY: posY - 1})
+            if (posY === 6) availableMoves.push({ posX, posY: posY - 2})
+        }
+    }
+
+    // Remove the spots where there is another 
+
+    return availableMoves;
 }
 
 // Elements
 const cells = document.getElementsByClassName("cell")
 
 
-const onPieceSelect = selector => {
-    const availableMoves = getAvailableMoves(selector);
-    const selectedCell = $(selector);
+const onPieceSelect = selectedCellInfo => {
+    const availableMoves = getAvailableMoves(selectedCellInfo);
+    const selectedCell = $(`#${selectedCellInfo.id}`);
 
     if (selectedCell.hasClass("selected-cell")) {
         selectedCell.removeClass("selected-cell");
@@ -45,16 +61,17 @@ for (let i = 0; i < cells.length; i++) {
     const posY = Math.floor(i / 8);
 
     if (cellId && cellData.length === 3) {
-        row.push({
+        const cell = {
             id: cellId,
             player: parseInt(cellData[0].slice(1)),
             posX,
             posY,
             type: cellData[1],
             variant: cellData[2],
-        })
+        }
+        row.push(cell)
 
-        $(cellSelector).click(() => onPieceSelect(cellSelector))
+        $(cellSelector).click(() => onPieceSelect(cell))
 
         $(cellSelector).hover(
             () => {
